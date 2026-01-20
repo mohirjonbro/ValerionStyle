@@ -1,0 +1,92 @@
+/* ========================= */
+/* Header asosiy stil */
+/* ========================= */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background-color: #162443;
+  color: white;
+  position: relative;
+}
+
+/* Logo */
+.logo img {
+  width: 120px;
+  border-radius: 70px;
+  height: auto;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 25px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #e5e7eb;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #38bdf8;
+}
+
+/* Burger button (desktopda ko‘rinmas) */
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* ========================= */
+/* Responsive 770px ga qadar */
+/* ========================= */
+@media (max-width: 770px) {
+  .nav {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    background-color: #0f172a;
+    display: none; /* defaultda yopiq */
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+
+  .nav.active {
+    display: flex; /* ochilganda ko‘rinadi */
+  }
+
+  .menu-btn {
+    display: block; /* mobilda ko‘rinadi */
+  }
+}
+
+/* ========================= */
+/* Qo‘shimcha kichik ekran 480px */
+/* ========================= */
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 20px;
+  }
+
+  .nav a {
+    font-size: 15px;
+  }
+
+  .menu-btn {
+    font-size: 26px;
+  }
+}
