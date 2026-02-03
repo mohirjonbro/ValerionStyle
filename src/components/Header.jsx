@@ -19,6 +19,7 @@ function Header() {
 
       {/* Navigation */}
       <nav className={`nav ${open ? "active" : ""}`}>
+        <Link to="my" onClick={closeMenu}>My Goods</Link>
         <Link to="/" onClick={closeMenu}>Home</Link>
         <Link to="/about" onClick={closeMenu}>About</Link>
         <Link to="/services" onClick={closeMenu}>Services</Link>

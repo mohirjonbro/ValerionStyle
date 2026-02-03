@@ -1,38 +1,53 @@
+:root {
+  --card-bg: #0f172a;
+  --accent-color: #38bdf8;
+  --accent-hover: #0ea5e9;
+  --text-main: #ffffff;
+  --text-dim: #cbd5f5;
+  --card-padding: 15px;
+  --img-height: 170px;
+}
+
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  /* auto-fill kichik ekranlarda bo'sh joy qolmasligini ta'minlaydi */
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 25px;
   padding: 40px;
 }
 
 .card {
-  background: #0f172a;
-  color: white;
+  background: var(--card-bg);
+  color: var(--text-main);
   border-radius: 12px;
-  padding: 15px;
-  transition: 0.3s;
+  padding: var(--card-padding);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .card img {
   width: 100%;
-  height: 170px;
+  height: var(--img-height);
   object-fit: cover;
   border-radius: 8px;
 }
 
 .card h3 {
   margin: 12px 0 6px;
-  font-size: 18px;
+  font-size: 1.1rem;
 }
 
 .desc {
-  font-size: 14px;
-  color: #cbd5f5;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  flex-grow: 1; /* Matn qisqa bo'lsa ham tugmalar bir xil chiziqda turishi uchun */
 }
 
 .card-bottom {
@@ -43,111 +58,50 @@
 }
 
 .price {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
-  color: #38bdf8;
+  color: var(--accent-color);
 }
 
 .card button {
-  padding: 7px 14px;
+  padding: 8px 16px;
   border: none;
   border-radius: 6px;
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--accent-color);
+  color: var(--card-bg);
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 .card button:hover {
-  background: #0ea5e9;
+  background: var(--accent-hover);
 }
 
 /* ================= */
-/* 📱 MEDIA QUERY    */
+/* 📱 MEDIA QUERIES   */
 /* ================= */
-@media (max-width: 1024px) {
-  .cards {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    padding: 30px;
-    gap: 20px;
-  }
-
-  .card img {
-    height: 150px;
-  }
-
-  .card h3 {
-    font-size: 16px;
-  }
-
-  .desc {
-    font-size: 13px;
-  }
-
-  .price {
-    font-size: 15px;
-  }
-
-  .card button {
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-}
 
 @media (max-width: 768px) {
+  :root {
+    --img-height: 150px;
+    --card-padding: 12px;
+  }
+  
   .cards {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     padding: 20px;
     gap: 15px;
-  }
-
-  .card img {
-    height: 130px;
-  }
-
-  .card h3 {
-    font-size: 15px;
-  }
-
-  .desc {
-    font-size: 12px;
-  }
-
-  .price {
-    font-size: 14px;
-  }
-
-  .card button {
-    padding: 5px 10px;
-    font-size: 13px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
 }
 
 @media (max-width: 480px) {
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Mobil qurilmada bittadan ustun */
     padding: 15px;
-    gap: 12px;
-  }
-
-  .card img {
-    height: 120px;
   }
 
   .card h3 {
-    font-size: 14px;
-  }
-
-  .desc {
-    font-size: 11px;
-  }
-
-  .price {
-    font-size: 13px;
-  }
-
-  .card button {
-    padding: 5px 10px;
-    font-size: 12px;
+    font-size: 1.2rem; /* Telefondan o'qish qulay bo'lishi uchun biroz kattaroq */
   }
 }
