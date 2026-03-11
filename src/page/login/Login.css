@@ -1,0 +1,110 @@
+/* Umumiy sahifa */
+.cyber-wrap {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Login card */
+.login-sec {
+  background: #0b1120;
+  padding: 40px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+.login-form h1 {
+  text-align: center;
+  color: #22d3ee;
+  margin-bottom: 5px;
+  letter-spacing: 2px;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: #cbd5f5;
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+/* Labels */
+.login-form label {
+  color: #94a3b8;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+/* Inputs */
+.login-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  margin-bottom: 15px;
+  background: #020617;
+  color: white;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login-form input:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 5px #22d3ee;
+}
+
+/* Button */
+.log-in {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #22d3ee;
+  color: #020617;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.log-in:hover {
+  background: #06b6d4;
+}
+
+/* Text links */
+.res-pass {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.for-pass {
+  color: #22d3ee;
+  cursor: pointer;
+}
+
+.for-pass:hover {
+  text-decoration: underline;
+}
+
+.login-form p {
+  margin-top: 10px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.login-form span {
+  color: #22d3ee;
+  cursor: pointer;
+}
+
+.login-form span:hover {
+  text-decoration: underline;
+}
