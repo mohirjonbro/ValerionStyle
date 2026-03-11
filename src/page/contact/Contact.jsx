@@ -46,15 +46,15 @@ const Contact = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Ismingiz</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+            <input placeholder='Enter Yor Full Name' type="text" name="name" value={formData.name} onChange={handleChange} required />
           </div>
           <div className="form-group">
             <label>Telefon raqamingiz</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+            <input placeholder='Enter Yor Phone Number' type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
           </div>
           <div className="form-group">
             <label>Xabaringiz</label>
-            <textarea name="message" value={formData.message} onChange={handleChange} rows="5" required></textarea>
+            <textarea placeholder='Enter Yor Message' name="message" value={formData.message} onChange={handleChange} rows="5" required></textarea>
           </div>
           <button type="submit">Yuborish</button>
         </form>

@@ -1,5 +1,5 @@
 .contact-section {
-  background-color: #ffffff;
+  background-color: #10003b;
   margin: 40px auto;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -15,12 +15,12 @@
 .contact-container h2 {
   font-size: 32px;
   margin-bottom: 20px;
-  color: #222;
+  color: #fff;
 }
 
 .contact-container p {
   font-size: 16px;
-  color: #555;
+  color: #fff;
   margin-bottom: 30px;
 }
 
