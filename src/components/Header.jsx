@@ -6,6 +6,13 @@ import "./Header.css";
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if current user is admin on component mount
+  React.useEffect(() => {
+    const adminStatus = localStorage.getItem("isAdmin");
+    setIsAdmin(adminStatus === "true");
+  }, []);
 
   const toggleMenu = () => setOpen(!open);
   const closeMenu = () => setOpen(false);
@@ -19,6 +26,9 @@ function Header() {
 
       {/* Navigation */}
       <nav className={`nav ${open ? "active" : ""}`}>
+        {isAdmin && (
+          <Link to="/admin" onClick={closeMenu} className="admin-link">👤 Admin Panel</Link>
+        )}
         <Link to="my" onClick={closeMenu}>My Goods</Link>
         <Link to="/" onClick={closeMenu}>Home</Link>
         <Link to="/about" onClick={closeMenu}>About</Link>
