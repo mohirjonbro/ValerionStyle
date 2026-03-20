@@ -10,9 +10,11 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "./page/login/Login";
 import ForgotPassword from "./page/forgotPassword/ForgotPassword";
 import Register from "./page/register/Register";
+import Admin from "./page/admin/Admin";
 
 const App = () => {
   const [signet, setSignet] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   return (
     <div>
@@ -20,9 +22,15 @@ const App = () => {
 
       <Routes>
         {/* Login */}
-        <Route path="/login" element={<Login setSignet={setSignet} />} />
+        <Route path="/login" element={<Login setSignet={setSignet} setIsAdmin={setIsAdmin} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/foget" element={<ForgotPassword />} />
+
+        {/* Admin Panel */}
+        <Route
+          path="/admin"
+          element={isAdmin ? <Admin /> : <Navigate to="/login" />}
+        />
 
         {/* Protected routes */}
         <Route

@@ -1,21 +1,61 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import React, { useState } from "react";
 
-const Login = ({ setSignet }) => {
+const Login = ({ setSignet, setIsAdmin }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const submitted = (e) => {
     e.preventDefault();
 
-    const savedName = localStorage.getItem("username");
-    const savedPassword = localStorage.getItem("password");
+    // Check if admin credentials
+    const ADMIN_USERNAME = "sardor";
+    const ADMIN_PASSWORD = "1234";
 
-    if (name === savedName && password === savedPassword) {
+    if (name === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      // Admin login
+      setIsAdmin(true);
       setSignet(true);
+      localStorage.setItem("isAdmin", "true");
+      localStorage.setItem("username", name);
+      localStorage.setItem("password", password);
+      alert("Welcome Admin Sardor! ✅");
+      
+      // Redirect admin to admin panel immediately
+      navigate("/admin");
     } else {
-      alert("Parol yoki login noto'g'ri ❌");
+      // Regular user login
+      const savedName = localStorage.getItem("username");
+      const savedPassword = localStorage.getItem("password");
+
+      if (name === savedName && password === savedPassword) {
+        setIsAdmin(false);
+        setSignet(true);
+        localStorage.setItem("isAdmin", "false");
+        alert("Xush kelibsiz! ✅");
+        
+        // Redirect regular user to home page
+        navigate("/");
+      } else {
+        // Check if user exists in registered users
+        const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
+        const foundUser = registeredUsers.find(u => u.username === name && u.password === password);
+        
+        if (foundUser) {
+          setIsAdmin(false);
+          setSignet(true);
+          localStorage.setItem("isAdmin", "false");
+          alert("Xush kelibsiz! ✅");
+          
+          // Redirect regular user to home page
+          navigate("/");
+        } else {
+          alert("Parol yoki login noto'g'ri ❌");
+          return;
+        }
+      }
     }
   };
 
