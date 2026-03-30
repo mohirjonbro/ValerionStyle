@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import { useEffect, useState } from "react";
 
 function Home() {
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
 
-  // Load products from localStorage (admin added products)
-  const storedProducts = localStorage.getItem("products");
-  const products = storedProducts ? JSON.parse(storedProducts) : [];
+  // Load products from json-server backend
+  useEffect(() => {
+    const loadProducts = () => {
+      fetch("http://localhost:5000/products")
+        .then((res) => res.json())
+        .then((data) => setProducts(data))
+        .catch((err) => console.error("Error fetching products:", err));
+    };
+
+    // Initial load
+    loadProducts();
+  }, []);
 
   const handleBuy = (product) => {
     navigate("/card", { state: { product } });

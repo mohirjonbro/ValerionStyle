@@ -13,8 +13,14 @@ import Register from "./page/register/Register";
 import Admin from "./page/admin/Admin";
 
 const App = () => {
-  const [signet, setSignet] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [signet, setSignet] = useState(() => {
+    // Check if user is already logged in
+    return localStorage.getItem("username") !== null;
+  });
+  const [isAdmin, setIsAdmin] = useState(() => {
+    // Check if current user is admin
+    return localStorage.getItem("isAdmin") === "true";
+  });
 
   return (
     <div>

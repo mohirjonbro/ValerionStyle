@@ -26,35 +26,23 @@ const Login = ({ setSignet, setIsAdmin }) => {
       // Redirect admin to admin panel immediately
       navigate("/admin");
     } else {
-      // Regular user login
-      const savedName = localStorage.getItem("username");
-      const savedPassword = localStorage.getItem("password");
-
-      if (name === savedName && password === savedPassword) {
+      // Check if user exists in registered users
+      const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
+      const foundUser = registeredUsers.find(u => u.username === name && u.password === password);
+      
+      if (foundUser) {
         setIsAdmin(false);
         setSignet(true);
         localStorage.setItem("isAdmin", "false");
+        localStorage.setItem("username", name);
+        localStorage.setItem("password", password);
         alert("Xush kelibsiz! ✅");
         
         // Redirect regular user to home page
         navigate("/");
       } else {
-        // Check if user exists in registered users
-        const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-        const foundUser = registeredUsers.find(u => u.username === name && u.password === password);
-        
-        if (foundUser) {
-          setIsAdmin(false);
-          setSignet(true);
-          localStorage.setItem("isAdmin", "false");
-          alert("Xush kelibsiz! ✅");
-          
-          // Redirect regular user to home page
-          navigate("/");
-        } else {
-          alert("Parol yoki login noto'g'ri ❌");
-          return;
-        }
+        alert("Parol yoki login noto'g'ri ❌");
+        return;
       }
     }
   };
