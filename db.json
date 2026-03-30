@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "title": "qwert",
+      "description": "qwefg",
+      "price": "200",
+      "img": "",
+      "id": "WMcot1iAZH8"
+    },
+    {
+      "id": "H_jxQuqBJoU",
+      "title": "Test Product",
+      "price": "100"
+    }
+  ],
+  "users": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -40,12 +40,14 @@ const Admin = () => {
         setCurrentUser(foundUser);
       }
     }
-    
-    // Load products from Home page
-    const storedProducts = localStorage.getItem("products");
-    if (storedProducts) {
-      setProducts(JSON.parse(storedProducts));
-    }
+  }, []);
+
+  // Load products from backend on component mount
+  useEffect(() => {
+    fetch("http://localhost:5000/products")
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error("Error fetching admin products:", err));
   }, []);
 
   // Delete user function
@@ -65,7 +67,7 @@ const Admin = () => {
     }
   };
 
-  // Add new product
+  // Add new product via API
   const handleAddProduct = (e) => {
     e.preventDefault();
     
@@ -79,22 +81,35 @@ const Admin = () => {
       id: Date.now().toString()
     };
     
-    const updatedProducts = [...products, productToAdd];
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    
-    alert("Product added successfully ✅");
-    setNewProduct({ title: "", description: "", price: "", img: "" });
-    setShowAddProduct(false);
+    fetch("http://localhost:5000/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(productToAdd)
+    })
+    .then(res => res.json())
+    .then(data => {
+      setProducts([...products, data]);
+      alert("Product added successfully ✅");
+      setNewProduct({ title: "", description: "", price: "", img: "" });
+      setShowAddProduct(false);
+    })
+    .catch(err => alert("Error adding product! Is json-server running?"));
   };
 
-  // Delete product
+  // Delete product via API
   const deleteProduct = (index) => {
     if (window.confirm("Delete this product?")) {
-      const updatedProducts = products.filter((_, i) => i !== index);
-      setProducts(updatedProducts);
-      localStorage.setItem("products", JSON.stringify(updatedProducts));
-      alert("Product deleted ✅");
+      const productToDelete = products[index];
+      
+      fetch(`http://localhost:5000/products/${productToDelete.id}`, {
+        method: "DELETE"
+      })
+      .then(() => {
+        const updatedProducts = products.filter((_, i) => i !== index);
+        setProducts(updatedProducts);
+        alert("Product deleted ✅");
+      })
+      .catch(err => alert("Error deleting product!"));
     }
   };
 

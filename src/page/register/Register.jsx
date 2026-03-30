@@ -17,6 +17,15 @@ const Register = () => {
       // Get existing users or initialize empty array
       const existingUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
       
+      // Check if user already exists
+      const userExists = existingUsers.find(u => u.username === name);
+      
+      if (userExists) {
+        alert("Bu username band! Boshqa username tanlang ❌");
+        setLoading(false);
+        return;
+      }
+      
       // Create new user object with timestamp
       const newUser = {
         username: name,
@@ -31,6 +40,7 @@ const Register = () => {
       localStorage.setItem("registeredUsers", JSON.stringify(existingUsers));
       localStorage.setItem("username", name);
       localStorage.setItem("password", password);
+      localStorage.setItem("isAdmin", "false");
 
       alert("Register muvaffaqiyatli ✅");
 
