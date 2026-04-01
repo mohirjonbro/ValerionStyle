@@ -76,6 +76,11 @@ const MyGoods = () => {
     setCards(filtered);
   };
 
+  const copyLink = (link) => {
+    navigator.clipboard.writeText(link);
+    alert("Link nusxalandi! ✅");
+  };
+
   return (
     <div className="container">
       <h1>Mahsulot Qo'shish</h1>
@@ -108,12 +113,10 @@ const MyGoods = () => {
               <span className="price">{card.tgUser}</span>
               <button onClick={() => handlePurchase(card)}>Bog'lanish</button>
             </div>
-            <button 
-              onClick={() => deleteCard(card.id)} 
-              style={{marginTop: '10px', background: '#ff4d4d', fontSize: '12px'}}
-            >
-              O'chirish
-            </button>
+            <div className="card-actions">
+              <button className="copy-btn" onClick={() => copyLink(card.link)}>Nusxa olish</button>
+              <button className="delete-btn-my" onClick={() => deleteCard(card.id)}>O'chirish</button>
+            </div>
           </div>
         ))}
       </div>

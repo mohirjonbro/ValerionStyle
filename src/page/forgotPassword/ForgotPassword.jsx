@@ -1,84 +1,68 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./ForgotPassword.css";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+    // Simulate an API call
+    setTimeout(() => {
+      // In a real app, we'd check the database. 
+      // Here we check if any user exists just for simulation.
+      const existingUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
+      const userExists = existingUsers.length > 0;
 
-      if (!res.ok) {
-        throw new Error("Server xatosi");
+      if (userExists) {
+        setMessage(`Parolni tiklash havolasi ${email} manziliga muvaffaqiyatli yuborildi! ✅`);
+      } else {
+        setMessage("Tizimda hech qanday foydalanuvchi topilmadi. ❌");
       }
-
-      const data = await res.json();
-      setMessage(data.message || "Reset link yuborildi ✅");
-    } catch (error) {
-      console.error(error);
-      setMessage("Server bilan bog‘lanishda xatolik ❌");
-    }
-
-    setLoading(false);
+      setLoading(false);
+      setEmail("");
+    }, 1500);
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
-      <h2>Forgot Password</h2>
+    <div className="forgot-page">
+      <div className="forgot-card">
+        <h2>Forgot Password</h2>
+        <p className="forgot-desc">Emailingizni kiriting va biz sizga parolni tiklash havolasini yuboramiz.</p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email kiriting"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        />
+        <form onSubmit={handleSubmit} className="forgot-form">
+          <input
+            type="email"
+            placeholder="Email kiriting"
+            className="forgot-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "5px",
-            background: "#4CAF50",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          {loading ? "Sending..." : "Reset Password"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="forgot-btn"
+            disabled={loading}
+          >
+            {loading ? "Yuborilmoqda..." : "Reset Password"}
+          </button>
+        </form>
 
-      {message && <p style={{ marginTop: "15px" }}>{message}</p>}
+        {message && <p className={`status-msg ${message.includes('muvaffaqiyatli') ? 'success' : 'error'}`}>{message}</p>}
 
-      <p style={{ marginTop: "20px" }}>
-        Hisobingiz yo‘qmi?{" "}
-        <Link to="/register">
-          <span className="for-pass">Register</span>
-        </Link>
-      </p>
+        <p className="register-link">
+          Hisobingiz yo‘qmi?{" "}
+          <Link to="/register">
+            <span>Register</span>
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

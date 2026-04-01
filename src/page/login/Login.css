@@ -1,110 +1,146 @@
-/* Umumiy sahifa */
 .cyber-wrap {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f172a, #020617);
-  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at center, #1e293b 0%, var(--bg-darker) 100%);
+  padding: 20px;
 }
 
-/* Login card */
 .login-sec {
-  background: #0b1120;
-  padding: 40px;
-  border-radius: 12px;
-  width: 350px;
-  box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 50px 40px;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Form */
+.login-sec::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
-/* Title */
 .login-form h1 {
   text-align: center;
-  color: #22d3ee;
-  margin-bottom: 5px;
-  letter-spacing: 2px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -1px;
 }
 
 .login-form h2 {
   text-align: center;
-  color: #cbd5f5;
-  font-size: 16px;
-  margin-bottom: 25px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 40px;
 }
 
-/* Labels */
 .login-form label {
-  color: #94a3b8;
-  margin-bottom: 5px;
-  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 4px;
 }
 
-/* Inputs */
 .login-form input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #334155;
-  margin-bottom: 15px;
-  background: #020617;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  margin-bottom: 24px;
+  background: rgba(2, 6, 23, 0.4);
   color: white;
   outline: none;
-  transition: 0.3s;
+  font-size: 1rem;
+  transition: var(--transition);
 }
 
 .login-form input:focus {
-  border-color: #22d3ee;
-  box-shadow: 0 0 5px #22d3ee;
+  border-color: var(--primary);
+  background: rgba(2, 6, 23, 0.6);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 0 20px rgba(99, 102, 241, 0.1);
 }
 
-/* Button */
 .log-in {
-  padding: 10px;
+  padding: 16px;
   border: none;
-  border-radius: 6px;
-  background: #22d3ee;
-  color: #020617;
-  font-weight: bold;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.3s;
+  margin-top: 10px;
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
 }
 
 .log-in:hover {
-  background: #06b6d4;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.6);
+  filter: brightness(1.1);
 }
 
-/* Text links */
+.log-in:active {
+  transform: translateY(0);
+}
+
 .res-pass {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #94a3b8;
+  margin-top: 24px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
 .for-pass {
-  color: #22d3ee;
-  cursor: pointer;
-}
-
-.for-pass:hover {
-  text-decoration: underline;
+  color: var(--primary);
+  font-weight: 600;
+  margin-left: 5px;
 }
 
 .login-form p {
-  margin-top: 10px;
-  text-align: center;
-  color: #94a3b8;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .login-form span {
-  color: #22d3ee;
-  cursor: pointer;
+  color: var(--primary);
+  font-weight: 600;
+  margin-left: 5px;
 }
 
-.login-form span:hover {
-  text-decoration: underline;
+.for-pass:hover, .login-form span:hover {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .login-sec {
+    padding: 40px 24px;
+  }
+  
+  .login-form h1 {
+    font-size: 2rem;
+  }
 }

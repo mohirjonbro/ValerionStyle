@@ -6,11 +6,13 @@ import Services from "./page/services/Services";
 import Contact from "./page/contact/Contact";
 import Shoop_page from "./page/Shoop_page";
 import MyGoods from "./page/myGoods/MyGoods";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Login from "./page/login/Login";
 import ForgotPassword from "./page/forgotPassword/ForgotPassword";
 import Register from "./page/register/Register";
 import Admin from "./page/admin/Admin";
+import NotFound from "./page/notFound/NotFound";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [signet, setSignet] = useState(() => {
@@ -22,9 +24,20 @@ const App = () => {
     return localStorage.getItem("isAdmin") === "true";
   });
 
+  const location = useLocation();
+  const hideHeaderRoutes = ["/login", "/register", "/foget"];
+  const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
+
   return (
     <div>
-      <Header />
+      {!shouldHideHeader && (
+        <Header 
+          signet={signet} 
+          setSignet={setSignet} 
+          isAdmin={isAdmin} 
+          setIsAdmin={setIsAdmin} 
+        />
+      )}
 
       <Routes>
         {/* Login */}
@@ -63,7 +76,9 @@ const App = () => {
           path="/my"
           element={signet ? <MyGoods /> : <Navigate to="/login" />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
+      {!shouldHideHeader && <Footer />}
     </div>
   );
 };

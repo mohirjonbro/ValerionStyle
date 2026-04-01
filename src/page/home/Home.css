@@ -1,81 +1,183 @@
-:root {
-  --card-bg: #0f172a;
-  --accent-color: #38bdf8;
-  --accent-hover: #0ea5e9;
-  --text-main: #ffffff;
-  --text-dim: #cbd5f5;
-  --card-padding: 15px;
-  --img-height: 170px;
+.home-page {
+  padding-top: 20px;
+}
+
+.home-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 600px;
+  padding: 14px 24px;
+  border-radius: 30px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.categories-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 40px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.categories-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.category-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.category-btn:hover {
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
+.category-btn.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.no-results {
+  text-align: center;
+  padding: 100px 20px;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.no-results h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.no-results p {
+  color: var(--text-secondary);
 }
 
 .cards {
   display: grid;
-  /* auto-fill kichik ekranlarda bo'sh joy qolmasligini ta'minlaydi */
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 25px;
-  padding: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+  padding: 20px 40px 60px;
 }
 
 .card {
-  background: var(--card-bg);
-  color: var(--text-main);
-  border-radius: 12px;
-  padding: var(--card-padding);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px) scale(1.01);
+  border-color: var(--primary);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
 }
 
 .card img {
   width: 100%;
-  height: var(--img-height);
+  height: 220px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.5s ease;
+  filter: brightness(0.9);
+}
+
+.card:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
 .card h3 {
-  margin: 12px 0 6px;
-  font-size: 1.1rem;
+  margin: 16px 0 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .desc {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  line-height: 1.4;
-  flex-grow: 1; /* Matn qisqa bo'lsa ham tugmalar bir xil chiziqda turishi uchun */
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+  margin-bottom: 20px;
 }
 
 .card-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--glass-border);
 }
 
 .price {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--accent-color);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--secondary);
 }
 
 .card button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 6px;
-  background: var(--accent-color);
-  color: var(--card-bg);
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .card button:hover {
-  background: var(--accent-hover);
+  background: var(--primary-hover);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
 }
 
 /* ================= */
@@ -83,25 +185,20 @@
 /* ================= */
 
 @media (max-width: 768px) {
-  :root {
-    --img-height: 150px;
-    --card-padding: 12px;
-  }
-  
   .cards {
-    padding: 20px;
-    gap: 15px;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    padding: 30px 20px;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
 
 @media (max-width: 480px) {
   .cards {
-    grid-template-columns: 1fr; /* Mobil qurilmada bittadan ustun */
-    padding: 15px;
+    grid-template-columns: 1fr;
+    padding: 20px 15px;
   }
 
   .card h3 {
-    font-size: 1.2rem; /* Telefondan o'qish qulay bo'lishi uchun biroz kattaroq */
+    font-size: 1.1rem;
   }
 }
