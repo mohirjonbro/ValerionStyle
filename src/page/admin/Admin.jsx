@@ -13,7 +13,8 @@ const Admin = () => {
     title: "",
     description: "",
     price: "",
-    img: ""
+    img: "",
+    category: "kiyim"
   });
 
   // Verify admin access and load users
@@ -42,12 +43,12 @@ const Admin = () => {
     }
   }, []);
 
-  // Load products from backend on component mount
+  // Load products from localStorage on component mount
   useEffect(() => {
-    fetch("http://localhost:5000/products")
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error("Error fetching admin products:", err));
+    const savedProducts = localStorage.getItem("products");
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts));
+    }
   }, []);
 
   // Delete user function
@@ -81,35 +82,22 @@ const Admin = () => {
       id: Date.now().toString()
     };
     
-    fetch("http://localhost:5000/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(productToAdd)
-    })
-    .then(res => res.json())
-    .then(data => {
-      setProducts([...products, data]);
-      alert("Product added successfully ✅");
-      setNewProduct({ title: "", description: "", price: "", img: "" });
-      setShowAddProduct(false);
-    })
-    .catch(err => alert("Error adding product! Is json-server running?"));
+    const updatedProducts = [...products, productToAdd];
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+    
+    alert("Product added successfully ✅");
+    setNewProduct({ title: "", description: "", price: "", img: "", category: "kiyim" });
+    setShowAddProduct(false);
   };
 
   // Delete product via API
   const deleteProduct = (index) => {
     if (window.confirm("Delete this product?")) {
-      const productToDelete = products[index];
-      
-      fetch(`http://localhost:5000/products/${productToDelete.id}`, {
-        method: "DELETE"
-      })
-      .then(() => {
-        const updatedProducts = products.filter((_, i) => i !== index);
-        setProducts(updatedProducts);
-        alert("Product deleted ✅");
-      })
-      .catch(err => alert("Error deleting product!"));
+      const updatedProducts = products.filter((_, i) => i !== index);
+      setProducts(updatedProducts);
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+      alert("Product deleted ✅");
     }
   };
 
@@ -137,8 +125,8 @@ const Admin = () => {
               <p className="stat-number">{users.length}</p>
             </div>
             <div className="stat-card">
-              <h3>Active Session</h3>
-              <p className="stat-number">{currentUser ? "Yes" : "No"}</p>
+              <h3>Total Products</h3>
+              <p className="stat-number">{products.length}</p>
             </div>
           </div>
 
@@ -174,7 +162,7 @@ const Admin = () => {
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td className="username-cell">{user.username}</td>
-                        <td className="password-cell">••••••••</td>
+                        <td className="password-cell">{user.password}</td>
                         <td>
                           {user.registeredAt 
                             ? new Date(user.registeredAt).toLocaleString() 
@@ -235,19 +223,36 @@ const Admin = () => {
                     value={newProduct.description}
                     onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
                   />
-                  <input
-                    type="text"
-                    placeholder="Price (e.g., 320 000 so'm)"
-                    value={newProduct.price}
-                    onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                    required
-                  />
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="Price (e.g., 320 000 so'm)"
+                      value={newProduct.price}
+                      onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                      required
+                    />
+                    <select
+                      value={newProduct.category}
+                      onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                      className="category-select"
+                    >
+                      <option value="kiyim">Kiyim</option>
+                      <option value="oyoq-kiyim">Oyoq kiyim</option>
+                      <option value="aksessuar">Aksessuar</option>
+                    </select>
+                  </div>
                   <input
                     type="url"
                     placeholder="Image URL"
                     value={newProduct.img}
                     onChange={(e) => setNewProduct({...newProduct, img: e.target.value})}
                   />
+                  {newProduct.img && (
+                    <div className="admin-img-preview">
+                      <p>Image Preview:</p>
+                      <img src={newProduct.img} alt="Product preview" />
+                    </div>
+                  )}
                   <button type="submit" className="submit-product-btn">
                     Add Product
                   </button>
@@ -267,7 +272,7 @@ const Admin = () => {
                       <th>#</th>
                       <th>Image</th>
                       <th>Title</th>
-                      <th>Description</th>
+                      <th>Category</th>
                       <th>Price</th>
                       <th>Actions</th>
                     </tr>
@@ -284,7 +289,7 @@ const Admin = () => {
                           )}
                         </td>
                         <td className="username-cell">{product.title}</td>
-                        <td>{product.description || "-"}</td>
+                        <td className="category-cell">{product.category}</td>
                         <td>{product.price}</td>
                         <td>
                           <button 
