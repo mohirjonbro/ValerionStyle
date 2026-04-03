@@ -405,6 +405,10 @@ function Home() {
     navigate("/card", { state: { product } });
   };
 
+  const handleDetail = (product) => {
+    navigate("/product", { state: { product } });
+  };
+
   const handleImgError = (e) => {
     e.target.src = "https://via.placeholder.com/500x500?text=Rasm+topilmadi";
   };
@@ -452,6 +456,7 @@ function Home() {
         ) : (
           filteredProducts.map((item, index) => (
             <div className="card" key={index}>
+            <div className="card-top" onClick={() => handleDetail(item)} style={{ cursor: "pointer" }}>
             <img
               src={item.img}
               alt={item.title}
@@ -465,6 +470,7 @@ function Home() {
               }}
             />
             <h3>{item.title}</h3>
+            </div>
             <p className="desc">{item.description}</p>
 
             <div className="card-bottom">
