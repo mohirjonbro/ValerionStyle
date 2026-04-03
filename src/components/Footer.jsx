@@ -25,7 +25,7 @@ const Footer = () => {
             <h4>Biz bilan bog'laning</h4>
             <div className="social-links">
               <a href="https://instagram.com" target="_blank" rel="noreferrer"><FaInstagram /></a>
-              <a href="https://t.me/sunnatillo" target="_blank" rel="noreferrer"><FaTelegram /></a>
+              <a href="https://t.me/m_abdusattarov" target="_blank" rel="noreferrer"><FaTelegram /></a>
               <a href="https://facebook.com" target="_blank" rel="noreferrer"><FaFacebook /></a>
             </div>
           </div>

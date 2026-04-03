@@ -12,6 +12,7 @@ import ForgotPassword from "./page/forgotPassword/ForgotPassword";
 import Register from "./page/register/Register";
 import Admin from "./page/admin/Admin";
 import NotFound from "./page/notFound/NotFound";
+import ProductDetail from "./page/productDetail/ProductDetail";
 import Footer from "./components/Footer";
 
 const App = () => {
@@ -75,6 +76,10 @@ const App = () => {
         <Route
           path="/my"
           element={signet ? <MyGoods /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/product"
+          element={signet ? <ProductDetail /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

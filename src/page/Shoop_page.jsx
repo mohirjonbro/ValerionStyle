@@ -22,7 +22,7 @@ const ShopPage = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // ➕ FAQAT 1 MARTA QO‘SHILADI
+  // ➕ FAQAT 1 MARTA QO'SHILADI
   useEffect(() => {
     if (!product) return;
 
@@ -79,7 +79,7 @@ const ShopPage = () => {
   // 📤 TELEGRAMGA YUBORISH
   const sendToTelegram = async () => {
     if (!name || !phone || !address) {
-      alert("Iltimos, barcha ma’lumotlarni to‘ldiring");
+      alert("Iltimos, barcha ma'lumotlarni to'ldiring");
       return;
     }
 
@@ -90,11 +90,12 @@ const ShopPage = () => {
 
     cart.forEach((item, i) => {
       text += `${i + 1}. ${item.title}\n`;
+      if (item.size) text += `📐 O'lcham: ${item.size}\n`;
       text += `💰 ${item.price}\n`;
       text += `📦 Soni: ${item.quantity}\n\n`;
     });
 
-    text += `💵 Umumiy: ${totalPrice.toLocaleString()} so‘m`;
+    text += `💵 Umumiy: ${totalPrice.toLocaleString()} so'm`;
 
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
@@ -105,7 +106,7 @@ const ShopPage = () => {
       }),
     });
 
-    alert("Buyurtma  yuborildi ✅");
+    alert("Buyurtma yuborildi ✅");
     localStorage.removeItem("cart");
     setCart([]);
     setName("");
@@ -121,8 +122,23 @@ const ShopPage = () => {
         <p>Mahsulotlar soni: {totalQuantity}</p>
       </header>
 
-      {/* EMPTY */}
-      {cart.length === 0 && <div className="empty">Savat bo‘sh</div>}
+      {/* EMPTY STATE */}
+      {cart.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+          </div>
+          <h2>Savatingiz hali bo'sh</h2>
+          <p>Mahsulotlarni ko'rib, xarid qilishni boshlang!</p>
+          <button className="shop-now-btn" onClick={() => navigate("/")}>
+            Xarid qilish
+          </button>
+        </div>
+      )}
 
       {/* CART */}
       <div className="cart">
@@ -133,6 +149,7 @@ const ShopPage = () => {
             <div className="cart-info">
               <h3>{item.title}</h3>
               <p>{item.description}</p>
+              {item.size && <p style={{ color: '#6366f1', fontWeight: 600 }}>O'lcham: {item.size}</p>}
               <strong>{item.price}</strong>
               <p>Soni: {item.quantity}</p>
             </div>
@@ -148,7 +165,7 @@ const ShopPage = () => {
         {cart.length > 0 && (
           <>
             <div className="total">
-              Umumiy: {totalPrice.toLocaleString()} so‘m
+              Umumiy: {totalPrice.toLocaleString()} so'm
             </div>
 
             <div className="form">
