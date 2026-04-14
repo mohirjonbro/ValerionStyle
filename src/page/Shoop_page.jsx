@@ -16,11 +16,19 @@ const ShopPage = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  // 🛒 CART
+  // 🛒 CART - User-specific cart for each user
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem("cart");
+    const currentUser = localStorage.getItem("username");
+    const cartKey = "cart_" + (currentUser || "guest");
+    const saved = localStorage.getItem(cartKey);
     return saved ? JSON.parse(saved) : [];
   });
+
+  // Helper function to get current user's cart key
+  const getCartKey = () => {
+    const currentUser = localStorage.getItem("username");
+    return "cart_" + (currentUser || "guest");
+  };
 
   // ➕ FAQAT 1 MARTA QO'SHILADI
   useEffect(() => {
@@ -31,7 +39,7 @@ const ShopPage = () => {
       if (exists) return prev;
 
       const updated = [...prev, { ...product, quantity: 1 }];
-      localStorage.setItem("cart", JSON.stringify(updated));
+      localStorage.setItem(getCartKey(), JSON.stringify(updated));
       return updated;
     });
 
@@ -46,7 +54,7 @@ const ShopPage = () => {
         : item
     );
     setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    localStorage.setItem(getCartKey(), JSON.stringify(updated));
   };
 
   const decrease = (title) => {
@@ -59,13 +67,13 @@ const ShopPage = () => {
       .filter((item) => item.quantity > 0);
 
     setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    localStorage.setItem(getCartKey(), JSON.stringify(updated));
   };
 
   const deleteItem = (title) => {
     const updated = cart.filter((item) => item.title !== title);
     setCart(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
+    localStorage.setItem(getCartKey(), JSON.stringify(updated));
   };
 
   // 💰 HISOB
@@ -107,7 +115,7 @@ const ShopPage = () => {
     });
 
     alert("Buyurtma yuborildi ✅");
-    localStorage.removeItem("cart");
+    localStorage.removeItem(getCartKey());
     setCart([]);
     setName("");
     setPhone("");
