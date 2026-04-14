@@ -393,8 +393,12 @@ function Home() {
       const storedProducts = localStorage.getItem("products");
       const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
+      // Check if default products have been edited
+      const editedDefaults = localStorage.getItem("editedDefaultProducts");
+      const defaultsToUse = editedDefaults ? JSON.parse(editedDefaults) : defaultProducts;
+
       // 🔥 combine
-      setProducts([...defaultProducts, ...adminProducts]);
+      setProducts([...defaultsToUse, ...adminProducts]);
     } catch (error) {
       console.error("LocalStorage error:", error);
       setProducts(defaultProducts);

@@ -11,6 +11,7 @@ import Login from "./page/login/Login";
 import ForgotPassword from "./page/forgotPassword/ForgotPassword";
 import Register from "./page/register/Register";
 import Admin from "./page/admin/Admin";
+import EditProduct from "./page/admin/EditProduct";
 import NotFound from "./page/notFound/NotFound";
 import ProductDetail from "./page/productDetail/ProductDetail";
 import Footer from "./components/Footer";
@@ -50,6 +51,10 @@ const App = () => {
         <Route
           path="/admin"
           element={isAdmin ? <Admin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/admin/edit-product"
+          element={isAdmin ? <EditProduct /> : <Navigate to="/login" />}
         />
 
         {/* Protected routes */}
