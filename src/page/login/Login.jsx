@@ -7,43 +7,44 @@ const Login = ({ setSignet, setIsAdmin }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const submitted = (e) => {
+  const submitted = async (e) => {
     e.preventDefault();
 
-    // Check if admin credentials
-    const ADMIN_USERNAME = "sardor";
-    const ADMIN_PASSWORD = "1234";
+    if (!name || !password) {
+      alert("Please fill all fields!");
+      return;
+    }
 
-    if (name === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      // Admin login
-      setIsAdmin(true);
-      setSignet(true);
-      localStorage.setItem("isAdmin", "true");
-      localStorage.setItem("username", name);
-      localStorage.setItem("password", password);
-      alert("Welcome Admin Sardor! ✅");
-      
-      // Redirect admin to admin panel immediately
-      navigate("/admin");
-    } else {
-      // Check if user exists in registered users
-      const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-      const foundUser = registeredUsers.find(u => u.username === name && u.password === password);
-      
-      if (foundUser) {
-        setIsAdmin(false);
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
         setSignet(true);
-        localStorage.setItem("isAdmin", "false");
-        localStorage.setItem("username", name);
-        localStorage.setItem("password", password);
-        alert("Xush kelibsiz! ✅");
+        setIsAdmin(data.user.role === "admin");
         
-        // Redirect regular user to home page
-        navigate("/");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("isAdmin", data.user.role === "admin" ? "true" : "false");
+        localStorage.setItem("username", data.user.username);
+        
+        alert(`Xush kelibsiz ${data.user.username}! ✅`);
+        
+        if (data.user.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       } else {
-        alert("Parol yoki login noto'g'ri ❌");
-        return;
+        alert(data.message || "Login yoki parol noto'g'ri ❌");
       }
+    } catch (err) {
+      console.error(err);
+      alert("Serverga ulanib bo'lmadi ❌");
     }
   };
 

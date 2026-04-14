@@ -84,42 +84,70 @@ const ShopPage = () => {
 
   const totalQuantity = cart.reduce((s, i) => s + i.quantity, 0);
 
-  // 📤 TELEGRAMGA YUBORISH
-  const sendToTelegram = async () => {
+  // 📤 TELEGRAMGA VA BAZAGA YUBORISH
+  const sendToOrderAPI = async () => {
     if (!name || !phone || !address) {
       alert("Iltimos, barcha ma'lumotlarni to'ldiring");
       return;
     }
 
-    let text = `🛒 YANGI BUYURTMA\n\n`;
-    text += `👤 Ism: ${name}\n`;
-    text += `📞 Telefon: ${phone}\n`;
-    text += `📍 Manzil: ${address}\n\n`;
+    try {
+      // 1. Save to Database
+      const orderData = {
+        items: cart.map(item => ({
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size || "",
+          img: item.img
+        })),
+        customerDetails: { name, phone, address },
+        totalPrice
+      };
 
-    cart.forEach((item, i) => {
-      text += `${i + 1}. ${item.title}\n`;
-      if (item.size) text += `📐 O'lcham: ${item.size}\n`;
-      text += `💰 ${item.price}\n`;
-      text += `📦 Soni: ${item.quantity}\n\n`;
-    });
+      const dbResponse = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
 
-    text += `💵 Umumiy: ${totalPrice.toLocaleString()} so'm`;
+      if (!dbResponse.ok) throw new Error("Database saving failed");
 
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-      }),
-    });
+      // 2. Send to Telegram
+      let text = `🛒 YANGI BUYURTMA\n\n`;
+      text += `👤 Ism: ${name}\n`;
+      text += `📞 Telefon: ${phone}\n`;
+      text += `📍 Manzil: ${address}\n\n`;
 
-    alert("Buyurtma yuborildi ✅");
-    localStorage.removeItem(getCartKey());
-    setCart([]);
-    setName("");
-    setPhone("");
-    setAddress("");
+      cart.forEach((item, i) => {
+        text += `${i + 1}. ${item.title}\n`;
+        if (item.size) text += `📐 O'lcham: ${item.size}\n`;
+        text += `💰 ${item.price}\n`;
+        text += `📦 Soni: ${item.quantity}\n\n`;
+      });
+
+      text += `💵 Umumiy: ${totalPrice.toLocaleString()} so'm`;
+
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text,
+        }),
+      });
+
+      alert("Buyurtma muvaffaqiyatli qabul qilindi ✅");
+      localStorage.removeItem(getCartKey());
+      setCart([]);
+      setName("");
+      setPhone("");
+      setAddress("");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Buyurtma berishda xato yuz berdi ❌");
+    }
   };
 
   return (
@@ -194,7 +222,7 @@ const ShopPage = () => {
               />
             </div>
 
-            <button className="order-btn" onClick={sendToTelegram}>
+            <button className="order-btn" onClick={sendToOrderAPI}>
               Buyurtma berish
             </button>
           </>

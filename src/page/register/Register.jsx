@@ -8,45 +8,37 @@ const Register = () => {
   const [loading, setLoading] = useState(false); // 🔥 loading state
   const navigate = useNavigate();
 
-  const registerUser = (e) => {
+  const registerUser = async (e) => {
     e.preventDefault();
 
-    setLoading(true); // loading boshlanadi
+    if (!name || !password) {
+      alert("Please fill all fields!");
+      return;
+    }
 
-    setTimeout(() => {
-      // Get existing users or initialize empty array
-      const existingUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-      
-      // Check if user already exists
-      const userExists = existingUsers.find(u => u.username === name);
-      
-      if (userExists) {
-        alert("Bu username band! Boshqa username tanlang ❌");
-        setLoading(false);
-        return;
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Register muvaffaqiyatli ✅");
+        navigate("/login");
+      } else {
+        alert(data.message || "Xatolik yuz berdi ❌");
       }
-      
-      // Create new user object with timestamp
-      const newUser = {
-        username: name,
-        password: password,
-        registeredAt: new Date().toISOString()
-      };
-      
-      // Add new user to array
-      existingUsers.push(newUser);
-      
-      // Save back to localStorage
-      localStorage.setItem("registeredUsers", JSON.stringify(existingUsers));
-      localStorage.setItem("username", name);
-      localStorage.setItem("password", password);
-      localStorage.setItem("isAdmin", "false");
-
-      alert("Register muvaffaqiyatli ✅");
-
-      setLoading(false); // loading tugadi
-      navigate("/");
-    }, 1500); // 1.5 sekund loading
+    } catch (err) {
+      console.error(err);
+      alert("Serverga ulanib bo'lmadi ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
