@@ -54,7 +54,7 @@ const EditProduct = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.title || !formData.price) {
@@ -62,47 +62,23 @@ const EditProduct = () => {
       return;
     }
 
-    const { productIndex, isDefaultProduct } = location.state;
+    try {
+      const response = await fetch(`http://localhost:5000/api/products/${product._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    if (isDefaultProduct) {
-      // Update default product
-      const editedDefaults = localStorage.getItem("editedDefaultProducts");
-      let defaultProducts = editedDefaults ? JSON.parse(editedDefaults) : [];
-      
-      // If no edited defaults exist yet, we need to get the original defaults
-      if (!editedDefaults) {
-        // This shouldn't happen as we pass the full defaultProducts array
-        alert("Error: Default products not found");
-        return;
+      if (response.ok) {
+        alert("Product updated successfully ✅");
+        navigate("/admin");
+      } else {
+        alert("Error updating product ❌");
       }
-
-      defaultProducts[productIndex] = {
-        title: formData.title,
-        description: formData.description,
-        price: formData.price,
-        img: formData.img,
-        category: formData.category
-      };
-
-      localStorage.setItem("editedDefaultProducts", JSON.stringify(defaultProducts));
-    } else {
-      // Update admin product
-      const adminProducts = JSON.parse(localStorage.getItem("products") || "[]");
-      const adminIndex = productIndex - location.state.defaultProductsCount;
-      
-      adminProducts[adminIndex] = {
-        title: formData.title,
-        description: formData.description,
-        price: formData.price,
-        img: formData.img,
-        category: formData.category
-      };
-
-      localStorage.setItem("products", JSON.stringify(adminProducts));
+    } catch (err) {
+      console.error(err);
+      alert("Server error ❌");
     }
-
-    alert("Product updated successfully ✅");
-    navigate("/admin");
   };
 
   if (!product) {

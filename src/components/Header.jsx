@@ -15,7 +15,7 @@ function Header({ signet, setSignet, isAdmin: isAdminProp, setIsAdmin }) {
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("isAdmin");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
 
     setSignet(false);
     setIsAdmin(false);
