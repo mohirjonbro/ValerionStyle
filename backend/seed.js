@@ -1,4 +1,6 @@
 import Product from './models/Product.js';
+import User from './models/User.js';
+import bcrypt from 'bcryptjs';
 
 const defaultProducts = [
   {
@@ -369,11 +371,26 @@ const defaultProducts = [
 
 export const seedDatabase = async () => {
   try {
-    const count = await Product.countDocuments();
-    if (count === 0) {
+    // Seed Products
+    const productCount = await Product.countDocuments();
+    if (productCount === 0) {
       console.log('🌱 Seeding default products...');
       await Product.insertMany(defaultProducts);
-      console.log('✅ Seeding complete!');
+      console.log('✅ Products seeded!');
+    }
+
+    // Seed Admin User
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('👤 Seeding default admin user...');
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const adminUser = new User({
+        username: 'admin',
+        password: hashedPassword,
+        role: 'admin'
+      });
+      await adminUser.save();
+      console.log('✅ Admin user created: admin / admin123');
     }
   } catch (err) {
     console.error('❌ Seeding error:', err);

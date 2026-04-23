@@ -22,9 +22,17 @@ function Home() {
       try {
         const response = await fetch("http://localhost:5000/api/products");
         const data = await response.json();
-        setProducts(data);
+        
+        // Faqat massiv bo'lsa set qilamiz
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.error("Data is not an array:", data);
+          setProducts([]); // Xato bo'lsa bo'sh massiv
+        }
       } catch (error) {
         console.error("Fetch error:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -45,12 +53,12 @@ function Home() {
   };
 
   // Filter products based on search term and category
-  const filteredProducts = products.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredProducts = Array.isArray(products) ? products.filter(item => {
+    const matchesSearch = item.title?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         item.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
-  });
+  }) : [];
 
   return (
     <div className="home-page">

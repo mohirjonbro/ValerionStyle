@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "p1",
+    "title": "Белый свитер",
+    "description": "Issiq va qulay oq sviter",
+    "price": "320 000 so'm + Карго",
+    "img": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=500&auto=format&fit=crop",
+    "category": "kiyim"
+  },
+  {
+    "_id": "p2",
+    "title": "Черный свитер",
+    "description": "Zamonaviy qora sviter",
+    "price": "350 000 so'm + Карго",
+    "img": "https://images.unsplash.com/photo-1614676471928-2ed0ad1061a4?q=80&w=500&auto=format&fit=crop",
+    "category": "kiyim"
+  }
+]

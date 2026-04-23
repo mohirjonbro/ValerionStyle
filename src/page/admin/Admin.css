@@ -83,6 +83,22 @@
   margin: 0;
 }
 
+.stat-detail {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-detail span {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+}
+
 /* Sections */
 .users-section, .info-section, .products-section {
   background: var(--glass-bg);
@@ -102,6 +118,12 @@
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--glass-border);
+}
+
+.section-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 
 .section-header h2 {
@@ -385,6 +407,90 @@ td {
   font-size: 0.9rem;
   margin: 0;
   font-weight: 500;
+}
+
+/* Order Actions */
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-btn, .reject-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+.accept-btn {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+.accept-btn:hover {
+  background: #10b981;
+  color: white;
+}
+
+.reject-btn {
+  background: rgba(244, 63, 94, 0.1);
+  color: #f43f5e;
+  border: 1px solid #f43f5e;
+}
+
+.reject-btn:hover {
+  background: #f43f5e;
+  color: white;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
+}
+
+.status-badge.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+/* Role Badges */
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.role-badge.admin {
+  background: rgba(244, 63, 94, 0.1);
+  color: #f43f5e;
+  border: 1px solid #f43f5e;
+}
+
+.role-badge.user {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid #10b981;
 }
 
 /* Responsive Design */

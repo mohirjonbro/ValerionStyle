@@ -29,7 +29,17 @@ const Register = () => {
 
       if (response.ok) {
         alert("Register muvaffaqiyatli ✅");
-        navigate("/login");
+        
+        // Avtomatik login qilish
+        const userData = data.user || { username: name, role: 'user' };
+        localStorage.setItem("token", data.token || "mock-token");
+        localStorage.setItem("username", userData.username);
+        localStorage.setItem("isAdmin", "false");
+        
+        if (typeof setSignet === 'function') setSignet(true);
+        if (typeof setIsAdmin === 'function') setIsAdmin(false);
+
+        navigate("/");
       } else {
         alert(data.message || "Xatolik yuz berdi ❌");
       }
