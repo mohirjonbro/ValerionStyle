@@ -33,12 +33,7 @@ const Login = ({ setSignet, setIsAdmin }) => {
         localStorage.setItem("username", data.user.username);
         
         alert(`Xush kelibsiz ${data.user.username}! ✅`);
-        
-        if (data.user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
+        navigate("/");
       } else {
         alert(data.message || "Login yoki parol noto'g'ri ❌");
       }

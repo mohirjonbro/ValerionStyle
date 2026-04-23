@@ -16,8 +16,13 @@ const Admin = () => {
     title: "",
     description: "",
     price: "",
-    img: "",
     category: "kiyim"
+  });
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUser, setNewUser] = useState({
+    username: "",
+    password: "",
+    role: "user"
   });
 
   // Verify admin access and load users
@@ -30,6 +35,12 @@ const Admin = () => {
     }
 
     setIsAdminVerified(true);
+    
+    // Set current user from localStorage
+    const username = localStorage.getItem("username");
+    if (username) {
+      setCurrentUser({ username });
+    }
 
     // Load users from API
     fetchUsers();
@@ -39,9 +50,15 @@ const Admin = () => {
     try {
       const response = await fetch("http://localhost:5000/api/auth/users");
       const data = await response.json();
-      setUsers(data);
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        console.error("Users API error:", data.message);
+        setUsers([]);
+      }
     } catch (err) {
       console.error("Error fetching users:", err);
+      setUsers([]);
     }
   };
 
@@ -49,9 +66,15 @@ const Admin = () => {
     try {
       const response = await fetch("http://localhost:5000/api/orders");
       const data = await response.json();
-      setOrders(data);
+      if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        console.error("Orders API error:", data.message);
+        setOrders([]);
+      }
     } catch (err) {
       console.error("Error fetching orders:", err);
+      setOrders([]);
     }
   };
 
@@ -64,9 +87,15 @@ const Admin = () => {
     try {
       const response = await fetch("http://localhost:5000/api/products");
       const data = await response.json();
-      setProducts(data);
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("Products API error:", data.message);
+        setProducts([]);
+      }
     } catch (err) {
       console.error("Error fetching products:", err);
+      setProducts([]);
     }
   };
 
@@ -87,9 +116,77 @@ const Admin = () => {
     }
   };
 
-  // Clear all users - Not typically implemented for security, but we'll leave the button or remove it
-  const clearAllUsers = () => {
-    alert("This feature is disabled for security. Delete users individually.");
+  // Order management
+  const updateOrderStatus = async (id, status) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (response.ok) {
+        fetchOrders();
+        alert(`Buyurtma holati yangilandi: ${status} ✅`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteOrder = async (id) => {
+    if (window.confirm("Buyurtmani o'chirib tashlamoqchimisiz?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/orders/${id}`, {
+          method: "DELETE"
+        });
+        if (response.ok) {
+          fetchOrders();
+          alert("Buyurtma o'chirildi ❌");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  // Clear all users
+  const clearAllUsers = async () => {
+    if (window.confirm("Barcha foydalanuvchilarni o'chirib tashlamoqchimisiz? (Admin qoladi)")) {
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/clear-all", {
+          method: "DELETE"
+        });
+        if (response.ok) {
+          fetchUsers();
+          alert("Foydalanuvchilar o'chirildi ✅");
+        } else {
+          alert("Xatolik yuz berdi ❌");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server bilan aloqa yo'q ❌");
+      }
+    }
+  };
+
+  // Clear all products
+  const clearAllProducts = async () => {
+    if (window.confirm("Barcha mahsulotlarni o'chirib tashlamoqchimisiz?")) {
+      try {
+        const response = await fetch("http://localhost:5000/api/products/clear-all", {
+          method: "DELETE"
+        });
+        if (response.ok) {
+          fetchProducts();
+          alert("Mahsulotlar o'chirildi ✅");
+        } else {
+          alert("Xatolik yuz berdi ❌");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server bilan aloqa yo'q ❌");
+      }
+    }
   };
 
   // Add new product via API
@@ -115,6 +212,34 @@ const Admin = () => {
         setShowAddProduct(false);
       } else {
         alert("Error adding product ❌");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error ❌");
+    }
+  };
+  
+  // Add new user via API
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    if (!newUser.username || !newUser.password) {
+      alert("Username and Password are required!");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+      if (response.ok) {
+        fetchUsers();
+        alert("User added successfully ✅");
+        setNewUser({ username: "", password: "", role: "user" });
+        setShowAddUser(false);
+      } else {
+        const data = await response.json();
+        alert(data.message || "Error adding user ❌");
       }
     } catch (err) {
       console.error(err);
@@ -158,14 +283,13 @@ const Admin = () => {
   // Start editing a product - navigate to edit page
   const startEditProduct = (index) => {
     const productToEdit = products[index];
-    const isDefaultProduct = index < defaultProducts.length;
+    const isDefaultProduct = false; // Now all products are handled equally from DB
     
     navigate("/admin/edit-product", {
       state: {
         product: productToEdit,
         productIndex: index,
-        isDefaultProduct: isDefaultProduct,
-        defaultProductsCount: defaultProducts.length
+        isDefaultProduct: isDefaultProduct
       }
     });
   };
@@ -192,6 +316,10 @@ const Admin = () => {
             <div className="stat-card">
               <h3>Total Users</h3>
               <p className="stat-number">{users.length}</p>
+              <div className="stat-detail">
+                <span>{users.filter(u => u.role === 'admin').length} Admins</span>
+                <span>{users.filter(u => u.role !== 'admin').length} Users</span>
+              </div>
             </div>
             <div className="stat-card">
               <h3>Total Products</h3>
@@ -206,13 +334,53 @@ const Admin = () => {
           {/* Users Table */}
           <div className="users-section">
             <div className="section-header">
-              <h2>Registered Users</h2>
-              {users.length > 0 && (
-                <button className="clear-btn" onClick={clearAllUsers}>
-                  Clear All
+              <h2>Registered Users ({users.length})</h2>
+              <div className="section-actions">
+                <button className="add-product-btn" onClick={() => setShowAddUser(!showAddUser)}>
+                  {showAddUser ? "Cancel" : "+ Add User"}
                 </button>
-              )}
+                {users.length > 0 && (
+                  <button className="clear-btn" onClick={clearAllUsers}>
+                    Clear All
+                  </button>
+                )}
+              </div>
             </div>
+
+            {showAddUser && (
+              <div className="add-product-form" style={{ marginBottom: '20px' }}>
+                <h3>Add New User</h3>
+                <form onSubmit={handleAddUser}>
+                  <div className="form-row">
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      value={newUser.username}
+                      onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                      required
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={newUser.password}
+                      onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                      required
+                    />
+                    <select
+                      value={newUser.role}
+                      onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                      className="category-select"
+                    >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <button type="submit" className="submit-product-btn">
+                    Create User
+                  </button>
+                </form>
+              </div>
+            )}
 
             {users.length === 0 ? (
               <div className="empty-state">
@@ -226,16 +394,22 @@ const Admin = () => {
                       <th>#</th>
                       <th>Username</th>
                       <th>Password</th>
+                      <th>Role</th>
                       <th>Registration Date</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user, index) => (
+                    {Array.isArray(users) && users.map((user, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td className="username-cell">{user.username}</td>
                         <td className="password-cell">{user.password}</td>
+                        <td>
+                          <span className={`role-badge ${user.role || 'user'}`}>
+                            {user.role || 'user'}
+                          </span>
+                        </td>
                         <td>
                           {user.registeredAt 
                             ? new Date(user.registeredAt).toLocaleString() 
@@ -276,7 +450,9 @@ const Admin = () => {
                       <th>Customer</th>
                       <th>Items</th>
                       <th>Total</th>
+                      <th>Status</th>
                       <th>Date</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -298,7 +474,30 @@ const Admin = () => {
                           {order.totalPrice.toLocaleString()} so'm
                         </td>
                         <td>
+                          <span className={`status-badge ${order.status || 'pending'}`}>
+                            {order.status || 'pending'}
+                          </span>
+                        </td>
+                        <td>
                           {new Date(order.createdAt).toLocaleString()}
+                        </td>
+                        <td>
+                          <div className="order-actions">
+                            <button 
+                              className="accept-btn" 
+                              onClick={() => updateOrderStatus(order._id, 'completed')}
+                              title="Qabul qilish"
+                            >
+                              ✓
+                            </button>
+                            <button 
+                              className="reject-btn" 
+                              onClick={() => deleteOrder(order._id)}
+                              title="O'chirish"
+                            >
+                              ✕
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -312,12 +511,19 @@ const Admin = () => {
           <div className="products-section">
             <div className="section-header">
               <h2>📦 Product Management</h2>
-              <button 
-                className="add-product-btn"
-                onClick={() => setShowAddProduct(!showAddProduct)}
-              >
-                {showAddProduct ? "Cancel" : "+ Add Product"}
-              </button>
+              <div className="section-actions">
+                <button 
+                  className="add-product-btn"
+                  onClick={() => setShowAddProduct(!showAddProduct)}
+                >
+                  {showAddProduct ? "Cancel" : "+ Add Product"}
+                </button>
+                {products.length > 0 && (
+                  <button className="clear-btn" onClick={clearAllProducts}>
+                    Clear All
+                  </button>
+                )}
+              </div>
             </div>
 
             {showAddProduct && (

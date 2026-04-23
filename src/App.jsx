@@ -44,7 +44,7 @@ const App = () => {
       <Routes>
         {/* Login */}
         <Route path="/login" element={<Login setSignet={setSignet} setIsAdmin={setIsAdmin} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register setSignet={setSignet} setIsAdmin={setIsAdmin} />} />
         <Route path="/foget" element={<ForgotPassword />} />
 
         {/* Admin Panel */}
