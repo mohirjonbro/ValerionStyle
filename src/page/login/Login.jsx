@@ -38,8 +38,23 @@ const Login = ({ setSignet, setIsAdmin }) => {
         alert(data.message || "Login yoki parol noto'g'ri ❌");
       }
     } catch (err) {
-      console.error(err);
-      alert("Serverga ulanib bo'lmadi ❌");
+      console.error("Connection error:", err);
+      
+      // Frontend Fallback: If server is down, allow login for the primary admin account
+      if (name === "sardor" && password === "1234") {
+        console.log("Offline mode: Logged in as sardor");
+        setSignet(true);
+        setIsAdmin(true);
+        
+        localStorage.setItem("token", "offline-token");
+        localStorage.setItem("isAdmin", "true");
+        localStorage.setItem("username", "sardor");
+        
+        alert("Server hozircha o'chiq, lekin siz Offline Admin rejimida kirdingiz! ⚠️");
+        navigate("/");
+      } else {
+        alert("Server bilan aloqa yo'q. Iltimos, serverni yoqing yoki keyinroq urinib ko'ring. ⏳");
+      }
     }
   };
 

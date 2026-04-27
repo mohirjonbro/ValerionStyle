@@ -42,7 +42,10 @@ const EditProduct = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Convert file to base64
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Rasm hajmi juda katta! (Max: 5MB)");
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({
@@ -52,6 +55,13 @@ const EditProduct = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const removeSelectedImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      img: ""
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -133,30 +143,37 @@ const EditProduct = () => {
               </select>
             </div>
             <div className="image-upload-section">
-              <label className="upload-label">
-                <span>Upload Image from Computer</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="file-input"
-                />
-              </label>
-              <p className="or-text">- OR -</p>
-              <input
-                type="url"
-                name="img"
-                placeholder="Image URL"
-                value={formData.img}
-                onChange={handleChange}
-              />
+              {!formData.img ? (
+                <>
+                  <label className="upload-label">
+                    <div className="upload-icon">📁</div>
+                    <span>Rasm yuklash (Kompyuterdan)</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="file-input"
+                    />
+                  </label>
+                  <p className="or-text">- YOKI -</p>
+                  <input
+                    type="url"
+                    name="img"
+                    placeholder="Rasm URL manzili (http://...)"
+                    value={formData.img}
+                    onChange={handleChange}
+                    className="url-input"
+                  />
+                </>
+              ) : (
+                <div className="admin-img-preview-active">
+                  <img src={formData.img} alt="Product preview" />
+                  <button type="button" className="remove-img-btn" onClick={removeSelectedImage}>
+                    O'chirish ✕
+                  </button>
+                </div>
+              )}
             </div>
-            {formData.img && (
-              <div className="admin-img-preview">
-                <p>Image Preview:</p>
-                <img src={formData.img} alt="Product preview" />
-              </div>
-            )}
             <button type="submit" className="submit-product-btn">
               Update Product
             </button>

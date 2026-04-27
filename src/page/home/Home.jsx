@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import { useEffect, useState } from "react";
+import { fetchWithCache } from "../../utils/apiHelper";
 
 function Home() {
   const navigate = useNavigate();
@@ -18,26 +19,18 @@ function Home() {
   ];
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/products");
-        const data = await response.json();
-        
-        // Faqat massiv bo'lsa set qilamiz
-        if (Array.isArray(data)) {
-          setProducts(data);
-        } else {
-          console.error("Data is not an array:", data);
-          setProducts([]); // Xato bo'lsa bo'sh massiv
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
+    const fetchProductsData = async () => {
+      setLoading(true);
+      const data = await fetchWithCache("http://localhost:5000/api/products", "cached_products");
+      
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
         setProducts([]);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
-    fetchProducts();
+    fetchProductsData();
   }, []);
 
   const handleBuy = (product) => {

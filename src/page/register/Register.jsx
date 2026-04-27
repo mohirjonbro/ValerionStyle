@@ -44,8 +44,9 @@ const Register = () => {
         alert(data.message || "Xatolik yuz berdi ❌");
       }
     } catch (err) {
-      console.error(err);
-      alert("Serverga ulanib bo'lmadi ❌");
+      console.error("Registration error:", err);
+      // Suppress the scary error and explain what to do
+      alert("Server hozircha band yoki o'chiq. Iltimos keyinroq urinib ko'ring. ⏳");
     } finally {
       setLoading(false);
     }
