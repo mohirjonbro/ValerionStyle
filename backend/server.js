@@ -43,8 +43,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
-// MongoDB connection
 const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// MongoDB connection
 const MONGO_URI = process.env.MONGO_URI;
 
 import { seedDatabase } from './seed.js';
@@ -65,7 +70,3 @@ mongoose.connect(MONGO_URI, {
     console.error('Qo\'llash: https://www.mongodb.com/docs/atlas/security-whitelist/');
     console.error('='.repeat(50) + '\n');
   });
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});

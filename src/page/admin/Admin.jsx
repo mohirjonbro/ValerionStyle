@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Admin.css";
+import { fetchWithCache } from "../../utils/apiHelper";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -47,33 +48,19 @@ const Admin = () => {
   }, []);
 
   const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/users");
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setUsers(data);
-      } else {
-        console.error("Users API error:", data.message);
-        setUsers([]);
-      }
-    } catch (err) {
-      console.error("Error fetching users:", err);
+    const data = await fetchWithCache("http://localhost:5000/api/auth/users", "cached_users");
+    if (Array.isArray(data)) {
+      setUsers(data);
+    } else {
       setUsers([]);
     }
   };
 
   const fetchOrders = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/orders");
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setOrders(data);
-      } else {
-        console.error("Orders API error:", data.message);
-        setOrders([]);
-      }
-    } catch (err) {
-      console.error("Error fetching orders:", err);
+    const data = await fetchWithCache("http://localhost:5000/api/orders", "cached_orders");
+    if (Array.isArray(data)) {
+      setOrders(data);
+    } else {
       setOrders([]);
     }
   };
@@ -84,17 +71,10 @@ const Admin = () => {
   }, []);
 
   const fetchProducts = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/products");
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setProducts(data);
-      } else {
-        console.error("Products API error:", data.message);
-        setProducts([]);
-      }
-    } catch (err) {
-      console.error("Error fetching products:", err);
+    const data = await fetchWithCache("http://localhost:5000/api/products", "cached_products");
+    if (Array.isArray(data)) {
+      setProducts(data);
+    } else {
       setProducts([]);
     }
   };
@@ -251,7 +231,11 @@ const Admin = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Convert file to base64
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Rasm hajmi juda katta! (Max: 5MB)");
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setNewProduct(prev => ({
@@ -261,6 +245,13 @@ const Admin = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const removeSelectedImage = () => {
+    setNewProduct(prev => ({
+      ...prev,
+      img: ""
+    }));
   };
 
   // Delete product
@@ -561,29 +552,36 @@ const Admin = () => {
                     </select>
                   </div>
                   <div className="image-upload-section">
-                    <label className="upload-label">
-                      <span>Upload Image from Computer</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="file-input"
-                      />
-                    </label>
-                    <p className="or-text">- OR -</p>
-                    <input
-                      type="url"
-                      placeholder="Image URL"
-                      value={newProduct.img}
-                      onChange={(e) => setNewProduct({...newProduct, img: e.target.value})}
-                    />
+                    {!newProduct.img ? (
+                      <>
+                        <label className="upload-label">
+                          <div className="upload-icon">📁</div>
+                          <span>Rasm yuklash (Kompyuterdan)</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="file-input"
+                          />
+                        </label>
+                        <p className="or-text">- YOKI -</p>
+                        <input
+                          type="url"
+                          placeholder="Rasm URL manzili (http://...)"
+                          value={newProduct.img}
+                          onChange={(e) => setNewProduct({...newProduct, img: e.target.value})}
+                          className="url-input"
+                        />
+                      </>
+                    ) : (
+                      <div className="admin-img-preview-active">
+                        <img src={newProduct.img} alt="Product preview" />
+                        <button type="button" className="remove-img-btn" onClick={removeSelectedImage}>
+                          O'chirish ✕
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {newProduct.img && (
-                    <div className="admin-img-preview">
-                      <p>Image Preview:</p>
-                      <img src={newProduct.img} alt="Product preview" />
-                    </div>
-                  )}
                   <button type="submit" className="submit-product-btn">
                     Add Product
                   </button>
